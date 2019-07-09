@@ -1,4 +1,5 @@
 from .models import Request
+from .forms import RequestForm
 from django.views.generic import ListView, CreateView
 
 
@@ -11,8 +12,9 @@ from django.views.generic import ListView, CreateView
 
 class RequestCreateView(CreateView):
     model = Request
-    fields = ['title', 'description', 'client', 'priority', 'target_date', 'product_area']
+    # fields = ['title', 'description', 'client', 'priority', 'target_date', 'product_area']
     template_name = 'feature_request/index.html'
+    form_class = RequestForm
 
     def form_valid(self, form):
         form.instance.submitter = self.request.user
