@@ -1,5 +1,7 @@
 from django.db import models
 from django.urls import reverse
+from django.core.validators import MinValueValidator
+from django.utils import timezone
 
 
 class Request(models.Model):
@@ -30,8 +32,8 @@ class Request(models.Model):
         choices=CLIENT_CHOICES,
         default=CLIENT_A,
     )
-    priority = models.IntegerField()
-    target_date = models.DateField(editable=True, null=False, blank=False)
+    priority = models.IntegerField(validators=[MinValueValidator(1)])
+    target_date = models.DateField(default=timezone.now(), editable=True, null=False, blank=False)
     product_area = models.CharField(
         max_length=20,
         choices=PRODUCT_AREA_CHOICES,
@@ -43,3 +45,4 @@ class Request(models.Model):
 
     def get_absolute_url(self):
         return reverse('request-create')
+        
