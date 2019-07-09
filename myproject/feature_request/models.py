@@ -40,17 +40,33 @@ class Request(models.Model):
         default=ASSESSMENTS,
     )
 
-    def reorder_priority(self):
-        existing_feature = Request.objects.get(priority=self.priority)
-        foo = Request.objects.filter(priority__gte=existing_feature.priority)
-        foo.update(priority=F('priority') + 1)
-        foo.save()
+    # def reorder_priority(self, *args, **kwargs):
+    #     existing_feature = Request.objects.get(priority=self.priority)
+    #     foo = Request.objects.filter(priority__gte=existing_feature.priority)
+    #     foo.update(priority=F('priority') + 1)
+    #     super().save(*args, **kwargs)
+    #     # self.priority = new_priority
+    #     # self.save()
+
+    def save(self, **kwargs):
+        # try to check if there is any existing priority that is duplicated:
+        try:
+            existing_feature = Request.objects.get(priority=self.priority)
+            foo = Request.objects.filter(priority__gte=existing_feature.priority)
+            if foo.count() > 0:
+                foo.update(priority=F('priority') + 1)
+
+            super(Request, self).save(**kwargs)
+
+        except:
+            super(Request, self).save(**kwargs)
 
     def __str__(self):
         return self.title
 
     def get_absolute_url(self):
-        return reverse('request-create')
+        url = reverse('request-create')
+        return url
 
     class Meta:
         verbose_name_plural = "requests"
