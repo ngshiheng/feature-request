@@ -1,7 +1,6 @@
 {% extends "feature_request/base.html" %}
 {% load crispy_forms_tags %}
 
-
 {% block content %}
 <div class="container-contact100">
     <div class="wrap-contact100">
@@ -11,16 +10,6 @@
 				</span>
             {% csrf_token %}
             {% include 'feature_request/bs4_form.html' with form=form %}
-
-            <!-- Template
-
-            <div class="wrap-input100 validate-input" data-validate="Please enter your name">
-                <input class="input100" type="text" name="name" placeholder="Full Name">
-                <span class="focus-input100"></span>
-            </div>
-
-            -->
-
 
             <!-- Submit button -->
             <div class="container-contact100-form-btn">
@@ -34,9 +23,4 @@
         </form>
     </div>
 </div>
-
-
-<div id="dropDownSelect1"></div>
-
-
 {% endblock content%}
