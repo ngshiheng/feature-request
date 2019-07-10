@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Request
+from .models import Request, ProductArea
 
 
 class RequestAdmin(admin.ModelAdmin):
@@ -7,3 +7,4 @@ class RequestAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Request, RequestAdmin)
+admin.site.register(ProductArea)

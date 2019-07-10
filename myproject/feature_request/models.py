@@ -4,6 +4,15 @@ from django.urls import reverse
 from django.utils import timezone
 
 
+class ProductArea(models.Model):
+    product_area = models.CharField(
+        max_length=20,
+    )
+
+    def __str__(self):
+        return self.product_area
+
+
 class Request(models.Model):
     CLIENT_A = 'Client A'
     CLIENT_B = 'Client B'
@@ -34,11 +43,7 @@ class Request(models.Model):
     )
     priority = models.PositiveIntegerField()
     target_date = models.DateField(default=timezone.now(), editable=True, null=False, blank=False)
-    product_area = models.CharField(
-        max_length=20,
-        choices=PRODUCT_AREA_CHOICES,
-        default=ASSESSMENTS,
-    )
+    product_area = models.ForeignKey(ProductArea, on_delete=models.CASCADE)
 
     def save(self, **kwargs):
         # try to check if there is any existing priority that is duplicated:
