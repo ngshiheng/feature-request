@@ -40,14 +40,6 @@ class Request(models.Model):
         default=ASSESSMENTS,
     )
 
-    # def reorder_priority(self, *args, **kwargs):
-    #     existing_feature = Request.objects.get(priority=self.priority)
-    #     foo = Request.objects.filter(priority__gte=existing_feature.priority)
-    #     foo.update(priority=F('priority') + 1)
-    #     super().save(*args, **kwargs)
-    #     # self.priority = new_priority
-    #     # self.save()
-
     def save(self, **kwargs):
         # try to check if there is any existing priority that is duplicated:
         try:
