@@ -2,12 +2,18 @@
 
 Build a web application that allows the user to create "feature requests" using Django Framework.
 
-## Installation
+## Building
 
 Use the package manager [pip](https://pip.pypa.io/en/stable/) to install foobar.
 
+It is best to use the python virtualenv tool to build locally:
+
+
 ```bash
-pip install -r requirements.txt
+$ virtualenv venv-feature-request
+$ source venv-feature-request/bin/activate
+$ pip install -r requirements.txt
+$ python manage.py runserver
 ```
 
 ## Usage
