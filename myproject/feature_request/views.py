@@ -7,7 +7,7 @@ def index(request):
     clients = Client.objects.all()
     product_areas = ProductArea.objects.all()
 
-    # Submit requests
+    # Submit request
     if request.method == "POST":
         if "taskAdd" in request.POST:
             title = request.POST["title"]
