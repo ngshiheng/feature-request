@@ -34,7 +34,7 @@ class Request(models.Model):
         (REPORTS, 'Reports'),
     ]
 
-    title = models.CharField(max_length=255, unique=True)
+    title = models.CharField(max_length=255)
     description = models.TextField(blank=True, null=True)
     client = models.CharField(
         max_length=10,
@@ -67,3 +67,4 @@ class Request(models.Model):
 
     class Meta:
         verbose_name_plural = "requests"
+        ordering = ["-priority"]

@@ -1,20 +1,35 @@
-from .models import Request
-from .forms import RequestForm
-from django.views.generic import ListView, CreateView
+from django.shortcuts import render, redirect
+from .models import Request, ProductArea
 
 
-# class RequestListView(ListView):
-#     model = Request
-#     template_name = 'feature_request/index.html'
-#     context_object_name = 'requests'
-#     ordering = ['-target_date']
+def index(request):
+    requests = Request.objects.all()
+    product_areas = ProductArea.objects.all()
 
+    if request.method == "POST":
+        if "taskAdd" in request.POST:
+            title = request.POST["title"]
+            description = request.POST["description"]
+            client = request.POST["client_select"]
+            priority = request.POST["priority"]
+            date = str(request.POST["date"])
+            product_area = request.POST["product_area_select"]
 
-class RequestCreateView(CreateView):
-    model = Request
-    template_name = 'feature_request/index.html'
-    form_class = RequestForm
+            Todo = Request(title=title,
+                           description=description,
+                           client=client,
+                           priority=priority,
+                           target_date=date,
+                           product_area=ProductArea.objects.get(product_area=product_area)
+                           )
+            Todo.save()
+            return redirect("/")
 
-    def form_valid(self, form):
-        form.instance.submitter = self.request.user
-        return super().form_valid(form)
+        if "taskDelete" in request.POST:
+            checkedlist = request.POST["checkedbox"]
+
+            for todo_id in checkedlist:
+                todo = Request.objects.get(id=int(todo_id))
+                todo.delete()
+
+    return render(request, "feature_request/index.html", {"requests": requests, "product_areas": product_areas})
