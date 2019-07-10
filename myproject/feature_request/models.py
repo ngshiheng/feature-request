@@ -38,7 +38,7 @@ class Request(models.Model):
 
         # if the priority does not exist:
         except:
-            # ordered_priority = Request.objects.order_by('priority')
+            Request.objects.order_by('priority')
             super(Request, self).save(**kwargs)
 
     def __str__(self):

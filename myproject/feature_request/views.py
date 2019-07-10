@@ -35,6 +35,7 @@ def index(request):
                 req = Request.objects.get(id=selected_request_id)
                 req.delete()
 
+            # do nothing if no checked box
             except:
                 pass
 
