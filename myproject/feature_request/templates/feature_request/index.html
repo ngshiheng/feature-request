@@ -1,26 +1,94 @@
-{% extends "feature_request/base.html" %}
-{% load crispy_forms_tags %}
+<!DOCTYPE html>
+<html >
+<head>
+  <meta charset="UTF-8">
+  <title>Django Feature Request App</title>
+  {% load static %}
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
+  <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+   <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+</head>
+<body>
+<div django-app="TaskManager">
+    <div class="container">
+            <div class="content">
+            <h1>Django Feature Request App</h1>
+            <p class="tagline">Submit A Feature Request</p>
+            <form action="" method="post">
 
-{% block content %}
-<div class="container-contact100">
-    <div class="wrap-contact100">
-        <form method="post" novalidate>
-				<span class="contact100-form-title">
-					Submit a Feature Request
-				</span>
-            {% csrf_token %}
-            {% include 'feature_request/bs4_form.html' with form=form %}
+                <!-- csrf token for basic security -->
+                {% csrf_token %}
 
-            <!-- Submit button -->
-            <div class="container-contact100-form-btn">
-                <button class="contact100-form-btn">
-						<span>
-							<i class="fa fa-paper-plane-o m-r-6" aria-hidden="true"></i>
-							Submit
-						</span>
-                </button>
-            </div>
-        </form>
-    </div>
+                <!-- title -->
+                <div class="inputContainer validate-input">
+                    <input type="text" id="title" class="taskName" placeholder="Enter a title here" name="title" required>
+                    <label for="title">Title</label>
+                </div>
+
+                <!-- description -->
+                <div class="inputContainer">
+                    <input type="text" id="description" class="taskName" placeholder="Describe your feature" name="description" required>
+                    <label for="description">Description</label>
+                </div>
+
+                <!-- client -->
+                <div class="inputContainer half">
+                    <i class="fa fa-caret-down selectArrow"></i>
+                    <select id="client" class="taskCategory" name="client_select">
+                    <option class="disabled" value="">Choose a client</option>
+
+                    {% for client in clients %}
+                        <option class="" value="{{ client.client }}" name="{{ client.client }}">{{ client.client }}</option>
+                    {% endfor %}
+                    </select>
+                    <label for="client">Client</label>
+                </div>
+
+                <!-- priority -->
+                 <div class="inputContainer half right">
+                    <input type="text" id="priority" class="taskName" name="priority">
+                    <label for="priority">Priority</label>
+                </div>
+
+                <!-- product area -->
+                <div class="inputContainer last half">
+                    <i class="fa fa-caret-down selectArrow"></i>
+                    <select id="product_area" class="taskCategory" name="product_area_select">
+                    <option class="disabled" value="">Choose a Product Area</option>
+
+                    {% for area in product_areas %}
+                        <option class="" value="{{ area.product_area }}" name="{{ area.product_area }}">{{ area.product_area }}</option>
+                    {% endfor %}
+                    </select>
+                    <label for="product_area">Product Area</label>
+                </div>
+
+                <!-- target date -->
+                <div class="inputContainer half last right">
+                    <input type="date" id="dueDate" class="taskDate" name="date">
+                    <label for="dueDate">Target Date</label>
+                </div>
+
+                <!-- buttons -->
+                <div class="row">
+                    <button class="taskAdd" name="taskAdd" type="submit"><i class="fa fa-plus icon"></i>Add Request</button>
+                    <button class="taskDelete" name="taskDelete" formnovalidate="" type="submit" onclick="$('input#sublist').click();"><i class="fa fa-trash-o icon"></i>Delete Request</button>
+                </div>
+
+                <ul class="taskList">
+            {% for request in requests %} <!-- django template lang - for loop -->
+                <li class="taskItem">
+                    <input type="checkbox" class="taskCheckbox" name="checkedbox" id="{{ request.id }}" value="{{ request.id }}">
+                    <label for="{{ request.id }}"><span class="complete-">{{ request.priority }}. {{ request.title }}</span></label>
+                    <span class="category-{{ todo.category }}">{{ request.product_area }}</span>
+                    <strong class="taskDate"><i class="fa fa-calendar"></i>{{ request.target_date }} - Client({{ request.client }})</strong>
+                </li>
+            {% endfor %}
+            </ul><!-- taskList -->
+            </form>
+            </div><!-- content -->
+ </div><!-- container -->
 </div>
-{% endblock content%}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+</body>
+</html>
