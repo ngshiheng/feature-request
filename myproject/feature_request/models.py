@@ -1,48 +1,28 @@
 from django.db.models import F
 from django.db import models
 from django.urls import reverse
-from django.utils import timezone
 
 
 class ProductArea(models.Model):
-    product_area = models.CharField(
-        max_length=20,
-    )
+    product_area = models.CharField(max_length=20)
 
     def __str__(self):
         return self.product_area
 
 
+class Client(models.Model):
+    client = models.CharField(max_length=50)
+
+    def __str__(self):
+        return self.client
+
+
 class Request(models.Model):
-    CLIENT_A = 'Client A'
-    CLIENT_B = 'Client B'
-    CLIENT_C = 'Client C'
-    CLIENT_CHOICES = [
-        (CLIENT_A, 'A'),
-        (CLIENT_B, 'B'),
-        (CLIENT_C, 'C'),
-    ]
-
-    ASSESSMENTS = 'Assessments'
-    BILLING = 'Billing'
-    RECRUIT = 'Recruit'
-    REPORTS = 'Reports'
-    PRODUCT_AREA_CHOICES = [
-        (ASSESSMENTS, 'Assessments'),
-        (BILLING, 'Billing'),
-        (RECRUIT, 'Recruit'),
-        (REPORTS, 'Reports'),
-    ]
-
     title = models.CharField(max_length=255)
     description = models.TextField(blank=True, null=True)
-    client = models.CharField(
-        max_length=10,
-        choices=CLIENT_CHOICES,
-        default=CLIENT_A,
-    )
+    client = models.ForeignKey(Client, on_delete=models.CASCADE)
     priority = models.PositiveIntegerField()
-    target_date = models.DateField(default=timezone.now(), editable=True, null=False, blank=False)
+    target_date = models.DateField(editable=True, null=False, blank=False)
     product_area = models.ForeignKey(ProductArea, on_delete=models.CASCADE)
 
     def save(self, **kwargs):
@@ -67,4 +47,4 @@ class Request(models.Model):
 
     class Meta:
         verbose_name_plural = "requests"
-        ordering = ["-priority"]
+        ordering = ["priority"]

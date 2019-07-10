@@ -1,9 +1,10 @@
 from django.shortcuts import render, redirect
-from .models import Request, ProductArea
+from .models import Request, ProductArea, Client
 
 
 def index(request):
     requests = Request.objects.all()
+    clients = Client.objects.all()
     product_areas = ProductArea.objects.all()
 
     if request.method == "POST":
@@ -17,7 +18,7 @@ def index(request):
 
             Todo = Request(title=title,
                            description=description,
-                           client=client,
+                           client=Client.objects.get(client=client),
                            priority=priority,
                            target_date=date,
                            product_area=ProductArea.objects.get(product_area=product_area)
@@ -32,4 +33,5 @@ def index(request):
                 todo = Request.objects.get(id=int(todo_id))
                 todo.delete()
 
-    return render(request, "feature_request/index.html", {"requests": requests, "product_areas": product_areas})
+    return render(request, "feature_request/index.html",
+                  {"requests": requests, "clients": clients, "product_areas": product_areas})

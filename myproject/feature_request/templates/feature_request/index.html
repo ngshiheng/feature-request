@@ -37,7 +37,7 @@
                     <select id="client" class="taskCategory" name="client_select">
                     <option class="disabled" value="">Choose a client</option>
 
-                    {% for client in requests %}
+                    {% for client in clients %}
                         <option class="" value="{{ client.client }}" name="{{ client.client }}">{{ client.client }}</option>
                     {% endfor %}
                     </select>
