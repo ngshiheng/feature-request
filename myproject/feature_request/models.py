@@ -26,25 +26,23 @@ class Request(models.Model):
     product_area = models.ForeignKey(ProductArea, on_delete=models.CASCADE)
 
     def save(self, **kwargs):
-        # try to check if there is any existing priority that is duplicated:
+
+        # check if the priority has already existed:
         try:
             existing_feature = Request.objects.get(priority=self.priority)
-            foo = Request.objects.filter(priority__gte=existing_feature.priority)
-            if foo.count() > 0:
-                foo.update(priority=F('priority') + 1)
+            current_priorities = Request.objects.filter(priority__gte=existing_feature.priority)
+            if current_priorities.count() > 0:
+                current_priorities.update(priority=F('priority') + 1)
 
             super(Request, self).save(**kwargs)
 
+        # if the priority does not exist:
         except:
+            # ordered_priority = Request.objects.order_by('priority')
             super(Request, self).save(**kwargs)
 
     def __str__(self):
         return self.title
 
-    def get_absolute_url(self):
-        url = reverse('request-create')
-        return url
-
     class Meta:
-        verbose_name_plural = "requests"
         ordering = ["priority"]

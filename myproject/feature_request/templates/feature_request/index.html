@@ -51,12 +51,13 @@
                 </div>
 
                 <!-- product area -->
-                <div class="inputContainer half last">
+                <div class="inputContainer last half">
                     <i class="fa fa-caret-down selectArrow"></i>
                     <select id="product_area" class="taskCategory" name="product_area_select">
-                    <option class="disabled" value="">Choose a product area</option>
+                    <option class="disabled" value="">Choose a Product Area</option>
+
                     {% for area in product_areas %}
-                        <option class="" value="{{ area.product_area }}" name="{{ area.product_area }}">{{ area.name }}</option>
+                        <option class="" value="{{ area.product_area }}" name="{{ area.product_area }}">{{ area.product_area }}</option>
                     {% endfor %}
                     </select>
                     <label for="product_area">Product Area</label>
@@ -71,15 +72,16 @@
                 <!-- buttons -->
                 <div class="row">
                     <button class="taskAdd" name="taskAdd" type="submit"><i class="fa fa-plus icon"></i>Add Request</button>
-                    <button class="taskDelete" name="taskDelete" formnovalidate="" type="submit" onclick="$('input#sublist').click();"><i class="fa fa-trash-o icon"></i>Delete Requests</button>
+                    <button class="taskDelete" name="taskDelete" formnovalidate="" type="submit" onclick="$('input#sublist').click();"><i class="fa fa-trash-o icon"></i>Delete Request</button>
                 </div>
-            <ul class="taskList">
-            {% for todo in todos %} <!-- django template lang - for loop -->
+
+                <ul class="taskList">
+            {% for request in requests %} <!-- django template lang - for loop -->
                 <li class="taskItem">
-                    <input type="checkbox" class="taskCheckbox" name="checkedbox" id="{{ todo.id }}" value="{{ todo.id }}">
-                    <label for="{{ todo.id }}"><span class="complete-">{{ todo.title }}</span></label>
-                    <span class="category-{{ todo.category }}">{{ todo.category }}</span>
-                    <strong class="taskDate"><i class="fa fa-calendar"></i>{{ todo.created }} - {{ todo.due_date }}</strong>
+                    <input type="checkbox" class="taskCheckbox" name="checkedbox" id="{{ request.id }}" value="{{ request.id }}">
+                    <label for="{{ request.id }}"><span class="complete-">{{ request.priority }}. {{ request.title }}</span></label>
+                    <span class="category-{{ todo.category }}">{{ request.product_area }}</span>
+                    <strong class="taskDate"><i class="fa fa-calendar"></i>{{ request.target_date }} - Client({{ request.client }})</strong>
                 </li>
             {% endfor %}
             </ul><!-- taskList -->

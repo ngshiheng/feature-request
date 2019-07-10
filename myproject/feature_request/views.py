@@ -7,6 +7,7 @@ def index(request):
     clients = Client.objects.all()
     product_areas = ProductArea.objects.all()
 
+    # Submit requests
     if request.method == "POST":
         if "taskAdd" in request.POST:
             title = request.POST["title"]
@@ -16,22 +17,26 @@ def index(request):
             date = str(request.POST["date"])
             product_area = request.POST["product_area_select"]
 
-            Todo = Request(title=title,
-                           description=description,
-                           client=Client.objects.get(client=client),
-                           priority=priority,
-                           target_date=date,
-                           product_area=ProductArea.objects.get(product_area=product_area)
-                           )
-            Todo.save()
+            Req = Request(title=title,
+                          description=description,
+                          client=Client.objects.get(client=client),
+                          priority=priority,
+                          target_date=date,
+                          product_area=ProductArea.objects.get(product_area=product_area)
+                          )
+            Req.save()
             return redirect("/")
 
+        # Delete a single request at a time
         if "taskDelete" in request.POST:
-            checkedlist = request.POST["checkedbox"]
+            try:
+                selected_request_id = request.POST["checkedbox"]
+                print(selected_request_id)
+                req = Request.objects.get(id=selected_request_id)
+                req.delete()
 
-            for todo_id in checkedlist:
-                todo = Request.objects.get(id=int(todo_id))
-                todo.delete()
+            except:
+                pass
 
     return render(request, "feature_request/index.html",
                   {"requests": requests, "clients": clients, "product_areas": product_areas})
