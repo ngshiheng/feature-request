@@ -5,7 +5,7 @@ Build a web application that allows the user to create "feature requests" using 
 This application is built and tested on Ubuntu.
 
 ## Description
-
+- This project was hosted on DigitalOcean.
 - Django is used as the server framework of this application 
 - PostgreSQL database is used in production while SQLite is used during development
 - Gunicorn application server is configured to interface with this application
