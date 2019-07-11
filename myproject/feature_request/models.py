@@ -18,6 +18,9 @@ class Client(models.Model):
     def __str__(self):
         return self.client
 
+    class Meta:
+        ordering = ['client']
+
 
 class Request(models.Model):
     title = models.CharField(max_length=255)
