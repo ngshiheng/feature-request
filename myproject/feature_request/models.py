@@ -43,14 +43,18 @@ class Request(models.Model):
 
         # if the priority does not exist:
         except:
-            least_priority_feature = Request.objects.all().last().priority
+            try:
+                least_priority_feature = Request.objects.all().last().priority
+                if int(self.priority) > least_priority_feature:
+                    self.priority = least_priority_feature + 1
+                super(Request, self).save(**kwargs)
 
-            if int(self.priority) > least_priority_feature:
-                self.priority = least_priority_feature + 1
-            super(Request, self).save(**kwargs)
+            except:
+                super(Request, self).save(**kwargs)
 
     def __str__(self):
         return self.title
 
     class Meta:
         ordering = ['priority']
+
