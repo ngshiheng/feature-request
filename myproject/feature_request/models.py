@@ -1,6 +1,5 @@
 from django.db.models import F
 from django.db import models
-from django.urls import reverse
 
 
 class ProductArea(models.Model):
@@ -8,6 +7,9 @@ class ProductArea(models.Model):
 
     def __str__(self):
         return self.product_area
+
+    class Meta:
+        verbose_name = "Product Area"
 
 
 class Client(models.Model):
@@ -19,7 +21,7 @@ class Client(models.Model):
 
 class Request(models.Model):
     title = models.CharField(max_length=255)
-    description = models.TextField(blank=True, null=True)
+    description = models.TextField()
     client = models.ForeignKey(Client, on_delete=models.CASCADE)
     priority = models.PositiveIntegerField()
     target_date = models.DateField(editable=True, null=False, blank=False)
@@ -29,8 +31,8 @@ class Request(models.Model):
 
         # check if the priority has already existed:
         try:
-            existing_feature = Request.objects.get(priority=self.priority)
-            current_priorities = Request.objects.filter(priority__gte=existing_feature.priority)
+            existing_feature_priority = Request.objects.get(priority=self.priority).priority
+            current_priorities = Request.objects.filter(priority__gte=existing_feature_priority)
             if current_priorities.count() > 0:
                 current_priorities.update(priority=F('priority') + 1)
 
@@ -38,11 +40,18 @@ class Request(models.Model):
 
         # if the priority does not exist:
         except:
-            Request.objects.order_by('priority')
+
+            # Request.objects.all().order_by('priority')
+            least_priority_feature = Request.objects.all().last().priority
+
+            if int(self.priority) > least_priority_feature:
+                self.priority = least_priority_feature + 1
             super(Request, self).save(**kwargs)
 
-    def __str__(self):
-        return self.title
 
-    class Meta:
-        ordering = ["priority"]
+def __str__(self):
+    return self.title
+
+
+class Meta:
+    ordering = ['priority']
