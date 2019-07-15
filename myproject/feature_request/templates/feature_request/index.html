@@ -76,15 +76,15 @@
                 </div>
 
                 <ul class="taskList">
-            {% for request in requests %} <!-- django template lang - for loop -->
+                {% for request in requests %} <!-- django template lang - for loop -->
                 <li class="taskItem">
-                    <input type="checkbox" class="taskCheckbox" name="checkedbox" id="{{ request.id }}" value="{{ request.id }}">
+                    <input type="radio" class="taskCheckbox" name="checkedbox" id="{{ request.id }}" value="{{ request.id }}">
                     <label for="{{ request.id }}"><span class="complete-">{{ request.priority }}. {{ request.title }}</span></label>
                     <span class="category-{{ todo.category }}">{{ request.product_area }}</span>
                     <strong class="taskDate"><i class="fa fa-calendar"></i>{{ request.target_date }} - Client({{ request.client }})</strong>
                 </li>
-            {% endfor %}
-            </ul><!-- taskList -->
+                {% endfor %}
+                </ul><!-- taskList -->
             </form>
             </div><!-- content -->
  </div><!-- container -->

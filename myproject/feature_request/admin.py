@@ -8,5 +8,4 @@ class RequestAdmin(admin.ModelAdmin):
 
 admin.site.register(Request, RequestAdmin)
 admin.site.register(ProductArea)
-admin.site.register(Client
-                    )
+admin.site.register(Client)
