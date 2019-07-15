@@ -1,43 +1,54 @@
-from django.shortcuts import render, redirect
-from .models import Request, ProductArea, Client
+from django.urls import reverse
+from django.shortcuts import render, HttpResponseRedirect
+from .forms import RequestForm
+from .models import Request
 
 
 def index(request):
-    requests = Request.objects.all().order_by('priority')
-    clients = Client.objects.all()
-    product_areas = ProductArea.objects.all()
+    form = RequestForm(request.POST)
+    request_list = Request.objects.all()
 
-    # Submit request
+    # If this is a POST request then process the Form data
     if request.method == "POST":
+
+        # When 'Add Request' is clicked:
         if "taskAdd" in request.POST:
-            title = request.POST["title"]
-            description = request.POST["description"]
-            client = request.POST["client_select"]
-            priority = request.POST["priority"]
-            date = str(request.POST["date"])
-            product_area = request.POST["product_area_select"]
+            if form.is_valid():
+                form.save()
 
-            request_object = Request(title=title,
-                                     description=description,
-                                     client=Client.objects.get(client=client),
-                                     priority=priority,
-                                     target_date=date,
-                                     product_area=ProductArea.objects.get(product_area=product_area)
-                                     )
-            request_object.save()
+                # Reorder all the features' priority after adding a new request
+                request_list = Request.objects.order_by('priority', '-id')
+                for i, req in enumerate(request_list, 1):
+                    Request.objects.filter(id=req.id).update(priority=i)
 
-            return redirect("/")
+                return HttpResponseRedirect(reverse('index'))
 
-        # Delete a single request at a time
+        # When 'Delete Request' is clicked:
         if "taskDelete" in request.POST:
             try:
                 selected_request_id = request.POST["checkedbox"]
                 req = Request.objects.get(id=selected_request_id)
                 req.delete()
 
-            # do nothing if no checked box:
+                # Reorder all the features' priority after removing a request
+                request_list = Request.objects.all()
+                for i, req in enumerate(request_list, 1):
+                    Request.objects.filter(id=req.id).update(priority=i)
+
+                return HttpResponseRedirect(reverse('index'))
+
+            # Do nothing if no requests are selected
             except:
                 pass
 
-    return render(request, "feature_request/index.html",
-                  {"requests": requests, "clients": clients, "product_areas": product_areas, })
+    # If this is a GET (or any other method) create the default form.
+    else:
+        form = RequestForm()
+        request_list = Request.objects.all()
+
+    context = {
+        'form': form,
+        'request_list': request_list,
+    }
+
+    return render(request, 'feature_request/index.html', context)
