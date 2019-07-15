@@ -1,4 +1,3 @@
-from django.db.models import F
 from django.db import models
 
 
@@ -29,28 +28,6 @@ class Request(models.Model):
     priority = models.PositiveIntegerField()
     target_date = models.DateField(editable=True, null=False, blank=False)
     product_area = models.ForeignKey(ProductArea, on_delete=models.CASCADE)
-
-    def save(self, **kwargs):
-
-        # check if the priority has already existed:
-        try:
-            existing_feature_priority = Request.objects.get(priority=self.priority).priority
-            current_priorities = Request.objects.filter(priority__gte=existing_feature_priority)
-            if current_priorities.count() > 0:
-                current_priorities.update(priority=F('priority') + 1)
-
-            super(Request, self).save(**kwargs)
-
-        # if the priority does not exist:
-        except:
-            try:
-                least_priority_feature = Request.objects.all().last().priority
-                if int(self.priority) > least_priority_feature:
-                    self.priority = least_priority_feature + 1
-                super(Request, self).save(**kwargs)
-
-            except:
-                super(Request, self).save(**kwargs)
 
     def __str__(self):
         return self.title

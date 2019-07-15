@@ -1,4 +1,5 @@
-from django.shortcuts import render, redirect
+from django.urls import reverse
+from django.shortcuts import render, HttpResponseRedirect
 from .models import Request, ProductArea, Client
 
 
@@ -7,7 +8,6 @@ def index(request):
     clients = Client.objects.all()
     product_areas = ProductArea.objects.all()
 
-    # Submit request
     if request.method == "POST":
         if "taskAdd" in request.POST:
             title = request.POST["title"]
@@ -26,7 +26,12 @@ def index(request):
                                      )
             request_object.save()
 
-            return redirect("/")
+            # Reorder all the features' priority after adding a new request
+            request_list = Request.objects.order_by('priority', '-id')
+            for i, req in enumerate(request_list, 1):
+                Request.objects.filter(id=req.id).update(priority=i)
+
+            return HttpResponseRedirect(reverse('index'))
 
         # Delete a single request at a time
         if "taskDelete" in request.POST:
@@ -34,6 +39,11 @@ def index(request):
                 selected_request_id = request.POST["checkedbox"]
                 req = Request.objects.get(id=selected_request_id)
                 req.delete()
+
+                # Reorder all the features' priority after adding a new request
+                request_list = Request.objects.order_by('priority', '-id')
+                for i, req in enumerate(request_list, 1):
+                    Request.objects.filter(id=req.id).update(priority=i)
 
             # do nothing if no checked box:
             except:
