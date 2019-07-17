@@ -15,7 +15,7 @@ This application is built and tested on Ubuntu.
 
 In this project, I use Trello to track and organize my tasks and features
 
-[My Trello link](https://trello.com/b/bhlakh3D/web-feature-request) 
+[My Trello link](https://trello.com/b/bhlakh3D/django-feature-request) 
 
 
 ## Installation
